@@ -29,7 +29,7 @@ export default function CategorySection() {
               <li className="h-full">
                 <Link
                   href={`/shop?category=${category.value}`}
-                  className="group relative block overflow-hidden rounded-2xl bg-ink"
+                  className="group relative block overflow-hidden rounded-2xl bg-ink transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1"
                 >
                   <div className="relative aspect-[3/4] w-full overflow-hidden sm:aspect-[4/5]">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
