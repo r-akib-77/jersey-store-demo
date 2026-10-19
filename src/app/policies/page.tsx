@@ -4,7 +4,7 @@ import { shopConfig } from "@/config/shop";
 
 export const metadata: Metadata = {
   title: "Policies",
-  description: "Privacy, terms, shipping and size guide for the Jersey House demo storefront.",
+  description: "Privacy, terms, shipping and size guide for the demo storefront.",
 };
 
 const sections = [
@@ -12,7 +12,7 @@ const sections = [
     id: "privacy",
     title: "Privacy Policy",
     body: [
-      "Jersey House is a demonstration storefront. The shopping bag and wishlist you create are stored only in your own browser using local storage — nothing is sent to a server, and no account is created.",
+      `${shopConfig.name} is a demonstration storefront. The shopping bag and wishlist you create are stored only in your own browser using local storage — nothing is sent to a server, and no account is created.`,
       "The customer details you type on the checkout screen are used only to pre-fill the WhatsApp message you choose to send. They are not transmitted anywhere else, and they disappear when you refresh the page.",
       "We never ask for card or bank details on this site. Any payment arrangement happens directly in the WhatsApp conversation with the shop, under the shop's own terms.",
     ],

@@ -10,8 +10,10 @@ import {
   type ReactNode,
 } from "react";
 import type { CartItem, Product } from "@/types";
+import { shopConfig } from "@/config/shop";
 
-const STORAGE_KEY = "jersey-house.cart.v1";
+/** Namespaced by brand so two demos on one domain never share a cart. */
+const STORAGE_KEY = `${shopConfig.storageNamespace}.cart.v1`;
 
 interface CartContextValue {
   items: CartItem[];

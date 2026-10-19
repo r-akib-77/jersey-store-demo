@@ -26,7 +26,7 @@ const archivo = Archivo({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://jersey-house.pages.dev"),
+  metadataBase: new URL(shopConfig.siteUrl),
   title: {
     default: `${shopConfig.name} — Premium Football Jerseys`,
     template: `%s | ${shopConfig.name}`,
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     "club jerseys",
     "national team jerseys",
     "retro jerseys",
-    "Jersey House",
+    shopConfig.name,
   ],
   openGraph: {
     title: `${shopConfig.name} — Premium Football Jerseys`,
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     images: ["/images/photos/hero.jpg"],
   },
   icons: {
-    icon: "/images/logo.png",
+    icon: shopConfig.logo,
   },
 };
 

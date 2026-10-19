@@ -5,7 +5,7 @@ import ShopView from "@/components/ShopView";
 export const metadata: Metadata = {
   title: "Shop all jerseys",
   description:
-    "Browse the full Jersey House collection — club jerseys, national team kits, retro classics and training wear.",
+    "Browse the full collection — club jerseys, national team kits, retro classics and training wear.",
 };
 
 export default function ShopPage() {

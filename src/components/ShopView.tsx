@@ -95,8 +95,8 @@ export default function ShopView() {
           </div>
           <h1 className="display-lg mt-4 text-ink">Shop all jerseys</h1>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted md:text-base">
-            Every shirt in the Jersey House collection — filter by category, search by club or
-            country, and pick your size.
+            Every shirt in the collection — filter by category, search by club or country, and pick
+            your size.
           </p>
         </Reveal>
 

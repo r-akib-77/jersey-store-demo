@@ -25,12 +25,16 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-4">
             <div className="flex items-center gap-3">
-              <span className="grid h-12 w-12 place-items-center rounded-xl bg-white">
+              <span className="grid h-12 w-12 place-items-center overflow-hidden rounded-xl bg-white">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/logo.png" alt="Jersey House logo" className="h-10 w-10 object-contain" />
+                <img
+                  src={shopConfig.logo}
+                  alt={`${shopConfig.name} logo`}
+                  className="h-9 w-9 object-contain"
+                />
               </span>
               <span className="font-display text-lg font-extrabold uppercase leading-none tracking-[0.2em] text-white">
-                Jersey House
+                {shopConfig.name}
               </span>
             </div>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/60">
@@ -139,7 +143,8 @@ export default function Footer() {
             ))}
           </div>
           <p className="text-xs text-white/40">
-            © {year} Jersey House. Demo storefront — product details and contact numbers are placeholders.
+            © {year} {shopConfig.name}. Demo storefront — product details and contact numbers are
+            placeholders.
           </p>
         </div>
       </div>

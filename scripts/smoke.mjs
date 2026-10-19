@@ -207,7 +207,9 @@ async function run() {
   if (!waHref || !waHref.includes("wa.me")) problems.push("whatsapp link missing");
 
   // localStorage persistence
-  const stored = await page.evaluate(() => window.localStorage.getItem("jersey-house.cart.v1"));
+  const stored = await page.evaluate(() =>
+    window.localStorage.getItem("jersey-store.cart.v1"),
+  );
   console.log(`localStorage cart: ${String(stored).slice(0, 120)}`);
   if (!stored) problems.push("cart not persisted to localStorage");
 
@@ -220,7 +222,9 @@ async function run() {
   if (!badgeAfterReload.includes("1")) problems.push("cart badge lost after reload");
 
   // Wishlist persistence
-  const wish = await page.evaluate(() => window.localStorage.getItem("jersey-house.wishlist.v1"));
+  const wish = await page.evaluate(() =>
+    window.localStorage.getItem("jersey-store.wishlist.v1"),
+  );
   console.log(`localStorage wishlist: ${wish}`);
 
   await browser.close();

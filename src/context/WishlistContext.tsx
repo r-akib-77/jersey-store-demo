@@ -9,8 +9,10 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { shopConfig } from "@/config/shop";
 
-const STORAGE_KEY = "jersey-house.wishlist.v1";
+/** Namespaced by brand so two demos on one domain never share a wishlist. */
+const STORAGE_KEY = `${shopConfig.storageNamespace}.wishlist.v1`;
 
 interface WishlistContextValue {
   ids: string[];

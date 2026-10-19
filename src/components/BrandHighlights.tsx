@@ -1,5 +1,6 @@
 import { MessageCircle, Ruler, Shirt, Sparkles } from "lucide-react";
 import Reveal from "@/components/Reveal";
+import { shopConfig } from "@/config/shop";
 
 const highlights = [
   {
@@ -32,7 +33,7 @@ export default function BrandHighlights() {
           <div className="max-w-2xl">
             <div className="flex items-center gap-3">
               <span className="h-px w-8 bg-accent-strong" aria-hidden="true" />
-              <p className="eyebrow text-muted">Why Jersey House</p>
+              <p className="eyebrow text-muted">Why {shopConfig.name}</p>
             </div>
             <h2 className="display-lg mt-4 text-ink">Built for supporters</h2>
           </div>

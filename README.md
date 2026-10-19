@@ -1,10 +1,13 @@
-# Jersey House
+# Football Jersey Store — Storefront Template
 
-A premium, frontend-only storefront demo for **Jersey House** — a football jersey shop.
+A premium, frontend-only storefront template for a football jersey shop.
 
 Built with Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS v4, Lucide icons and
 Framer Motion. There is **no backend**: all product data is local, the cart and wishlist live in
 React state plus `localStorage`, and orders are handed off to WhatsApp.
+
+> The branding is intentionally generic so the demo can be shown to any client. Everything
+> brand-specific lives in one file — see [Rebranding](#rebranding-in-two-minutes).
 
 ## Quick start
 
@@ -20,7 +23,26 @@ npm run build    # static production build -> ./out
 npm run lint     # eslint
 npm run start    # serve the production build
 npm run assets:build   # regenerate product renders / logo / photo crops
+node scripts/smoke.mjs http://localhost:4173   # visual + interaction QA run
 ```
+
+## Rebranding in two minutes
+
+| What | Where |
+| --- | --- |
+| Store name | `src/config/shop.ts` → `name` (nav wordmark, footer, page titles, WhatsApp messages) |
+| Logo | Drop the client's file at `public/images/logo.png` — or point `shopConfig.logo` elsewhere |
+| WhatsApp number | `src/config/shop.ts` → `whatsappNumber` (digits only, no `+`) |
+| Email / phone / address | `src/config/shop.ts` |
+| Social links | `src/config/shop.ts` → `socials` |
+| Nav / footer / policy links | `src/config/shop.ts` |
+| Accent colour + type | `src/app/globals.css` → the `@theme` block |
+| Product catalogue | `src/data/products.ts` (name, price, image, copy) |
+
+`storageNamespace` keeps the cart and wishlist separate per brand, so two demos hosted on the
+same domain never share state.
+
+The original client logo is kept at `public/images/brand/` for reference.
 
 ## What's inside
 
@@ -45,28 +67,18 @@ src/
   lib/            formatting and WhatsApp message helpers
   types/          shared TypeScript types
 scripts/          asset generation and QA helpers (dev-only)
+public/images/    generated renders, processed photos, brand mark
 ```
-
-## Configuration
-
-`src/config/shop.ts` holds everything a store owner would change:
-
-- `whatsappNumber` — **placeholder** number used to build `wa.me` links
-- `email`, `phone`, `address` — placeholder contact details
-- navigation, category, shop and policy links
-- currency and size list
-
-Prices are shown in Bangladeshi taka (`৳`) via `src/lib/format.ts`.
 
 ## Imagery
 
 `npm run assets:build` regenerates:
 
 - `public/images/products/*.png` — studio-style jersey renders generated from SVG templates
-- `public/images/logo.png` — the supplied brand mark, trimmed and made transparent
+- `public/images/logo.png` — the generic brand mark
 - `public/images/photos/*` — shop photography, cropped to a consistent 4:5 frame
 
-Product photography is a mix of the shop's own photos and free-to-use editorial imagery from
+Product photography mixes the client's own photos with free-to-use editorial imagery from
 Unsplash, all stored locally so the demo works offline.
 
 ## Notes for the demo
