@@ -46,9 +46,9 @@ export default function Navbar() {
               onClick={() => setMenuOpen(true)}
               aria-label="Open menu"
               aria-expanded={menuOpen}
-              className="-ml-2 grid h-10 w-10 place-items-center rounded-lg text-ink transition-colors hover:bg-mist lg:hidden"
+              className="-ml-2 grid h-11 w-11 place-items-center rounded-lg text-ink transition-colors hover:bg-mist lg:hidden"
             >
-              <Menu className="h-5 w-5" />
+              <Menu className="h-6 w-6 sm:h-5 sm:w-5" />
             </button>
             <Logo />
           </div>
@@ -83,9 +83,9 @@ export default function Navbar() {
               type="button"
               onClick={openSearch}
               aria-label="Search jerseys"
-              className="grid h-10 w-10 place-items-center rounded-lg text-ink transition-colors hover:bg-mist"
+              className="grid h-11 w-11 place-items-center rounded-lg text-ink transition-colors hover:bg-mist"
             >
-              <Search className="h-[18px] w-[18px]" />
+              <Search className="h-[19px] w-[19px] sm:h-[18px] sm:w-[18px]" />
             </button>
 
             <Link
@@ -105,11 +105,11 @@ export default function Navbar() {
               type="button"
               onClick={openCart}
               aria-label={`Shopping bag, ${itemCount} items`}
-              className="relative grid h-10 w-10 place-items-center rounded-lg text-ink transition-colors hover:bg-mist"
+              className="relative grid h-11 w-11 place-items-center rounded-lg text-ink transition-colors hover:bg-mist"
             >
-              <ShoppingBag className="h-[18px] w-[18px]" />
+              <ShoppingBag className="h-[23px] w-[23px] sm:h-[18px] sm:w-[18px]" />
               {itemCount > 0 && (
-                <span className="absolute right-0.5 top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-accent px-1 text-[10px] font-bold text-ink">
+                <span className="absolute right-0 top-0.5 grid h-4.5 min-w-4.5 place-items-center rounded-full bg-accent px-1 text-[10px] font-bold text-ink">
                   {itemCount}
                 </span>
               )}
