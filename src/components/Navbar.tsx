@@ -91,9 +91,9 @@ export default function Navbar() {
             <Link
               href="/wishlist"
               aria-label={`Wishlist, ${wishlistCount} items`}
-              className="relative hidden h-10 w-10 place-items-center rounded-lg text-ink transition-colors hover:bg-mist sm:grid"
+              className="relative grid h-11 w-11 place-items-center rounded-lg text-ink transition-colors hover:bg-mist sm:h-10 sm:w-10"
             >
-              <Heart className="h-[18px] w-[18px]" />
+              <Heart className="h-5 w-5 sm:h-[18px] sm:w-[18px]" />
               {wishlistCount > 0 && (
                 <span className="absolute right-1 top-1 grid h-4 min-w-4 place-items-center rounded-full bg-ink px-1 text-[10px] font-bold text-white">
                   {wishlistCount}

@@ -23,8 +23,11 @@ export function Logo({ inverted = false, className = "" }: { inverted?: boolean;
         />
       </span>
       <span className="flex flex-col leading-none">
+        {/* Under 400px the lockup collapses to the mark only — 3x44px icon taps
+            plus the full stacked wordmark cannot share 360px. The brand name
+            remains visible in the mobile menu, footer and page title. */}
         <span
-          className={`font-display text-[13px] font-extrabold uppercase leading-none tracking-[0.18em] sm:tracking-[0.2em] sm:text-[15px] ${
+          className={`hidden min-[400px]:block font-display text-[13px] font-extrabold uppercase leading-none tracking-[0.18em] sm:tracking-[0.2em] sm:text-[15px] ${
             inverted ? "text-white" : "text-ink"
           }`}
         >
@@ -32,7 +35,7 @@ export function Logo({ inverted = false, className = "" }: { inverted?: boolean;
         </span>
         {secondary && (
           <span
-            className={`sm:mt-0.5 mt-1 font-display text-[13px] font-extrabold uppercase leading-none tracking-[0.18em] sm:tracking-[0.2em] sm:text-[15px] ${
+            className={`hidden min-[400px]:mt-1 min-[400px]:block sm:mt-0.5 font-display text-[13px] font-extrabold uppercase leading-none tracking-[0.18em] sm:tracking-[0.2em] sm:text-[15px] ${
               inverted ? "text-accent" : "text-muted"
             }`}
           >
