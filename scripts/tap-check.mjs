@@ -22,8 +22,8 @@ page.on("console", (m) => {
   if (m.type() === "error") problems.push(`console: ${m.text()}`);
 });
 
-await page.goto(`${BASE}/shop/`, { waitUntil: "networkidle" });
-await page.waitForTimeout(900);
+await page.goto(`${BASE}/shop/`, { waitUntil: "load", timeout: 60000 });
+await page.waitForTimeout(1500);
 
 // 1. Tap the jersey IMAGE itself (not the hover-only button) -> quick view must open.
 const card = page.locator("article").nth(2);
@@ -46,8 +46,8 @@ if (open) {
 await page.screenshot({ path: path.join(SHOTS, "tap-check-quickview.png") });
 
 // 2. How long the modal takes to MOUNT after the tap (excludes animation)
-await page.goto(`${BASE}/shop/`, { waitUntil: "networkidle" });
-await page.waitForTimeout(900);
+await page.goto(`${BASE}/shop/`, { waitUntil: "load", timeout: 60000 });
+await page.waitForTimeout(1500);
 const mountMs = await page.evaluate(
   () =>
     new Promise((resolve) => {
