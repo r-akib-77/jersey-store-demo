@@ -1,11 +1,13 @@
 /**
- * Generates the generic placeholder brand mark used by the storefront template.
- * A neutral, trademark-free kit silhouette in the brand black with a lime accent.
- * Replace public/images/logo.png with a client's own mark (or point shopConfig.logo
- * at a different file) when rebranding.
+ * Brand-logo pipeline — converts a client's raster logo into the storefront logo asset.
+ *
+ *   node scripts/build-logo.mjs "<path-to-source-logo>" [slug]
+ *
+ * The source is trimmed to its visible content, square-padded on its own detected
+ * background colour, and written to public/images/logo.png (also used as favicon).
+ * The untouched original is archived under public/images/brand/<slug>-logo.<ext>.
  */
-import { mkdir, writeFile, copyFile } from "node:fs/promises";
-import { existsSync } from "node:fs";
+import { mkdir, copyFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
@@ -14,49 +16,111 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const OUT = path.join(ROOT, "public", "images");
 const BRAND_DIR = path.join(OUT, "brand");
-const ORIGINAL_SOURCE = "C:/Users/rakib/Desktop/jerseyHouseLogo.jpg";
 
-const JERSEY_PATH = `M 500 252
-C 462 252 434 266 408 284
-C 386 296 352 302 322 310
-C 262 326 214 358 188 400
-C 170 430 174 464 198 488
-L 250 552
-C 262 568 284 572 298 558
-L 322 462
-L 332 902
-C 333 930 344 948 368 948
-L 632 948
-C 656 948 667 930 668 902
-L 678 462
-L 702 558
-C 716 572 738 568 750 552
-L 802 488
-C 826 464 830 430 812 400
-C 786 358 738 326 678 310
-C 648 302 614 296 592 284
-C 566 266 538 252 500 252 Z`;
+const SOURCE = process.argv[2] ?? "C:/Users/rakib/Desktop/logo.jpg";
+const SLUG = process.argv[3] ?? "client";
+const MAX_SIDE = 640; // output resolution (favicon + tile need ~64px at 2x)
+const PAD_FRACTION = 0.07; // breathing room around the mark, as a fraction of the square side
 
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <defs>
-    <clipPath id="kit"><path d="${JERSEY_PATH}"/></clipPath>
-  </defs>
-  <g transform="translate(256 256) scale(0.72) translate(-500 -592)">
-    <path d="${JERSEY_PATH}" fill="#080808"/>
-    <g clip-path="url(#kit)">
-      <path d="M 150 1000 L 520 1000 L 760 100 L 600 100 Z" fill="#A3E635"/>
-    </g>
-  </g>
-</svg>`;
+const img = sharp(SOURCE);
+const meta = await img.metadata();
+const { width, height, channels = 3 } = meta;
 
-await mkdir(OUT, { recursive: true });
-await writeFile(path.join(OUT, "logo.svg"), svg, "utf8");
-await sharp(Buffer.from(svg)).resize(512, 512).png().toFile(path.join(OUT, "logo.png"));
+const { data, info } = await img.clone().raw().toBuffer({ resolveWithObject: true });
+const pxAt = (x, y) => {
+  const i = (y * info.width + x) * info.channels;
+  return [data.at(i), data.at(i + 1), data.at(i + 2)];
+};
 
-// Keep the original client logo in the repo so it is never lost.
-await mkdir(BRAND_DIR, { recursive: true });
-if (existsSync(ORIGINAL_SOURCE)) {
-  await copyFile(ORIGINAL_SOURCE, path.join(BRAND_DIR, "jersey-house-logo.jpg"));
+// 1. Detect the background colour from the four corners.
+const corners = [
+  [2, 2],
+  [info.width - 3, 2],
+  [2, info.height - 3],
+  [info.width - 3, info.height - 3],
+].map(([x, y]) => pxAt(x, y));
+const bg = [0, 1, 2].map((c) =>
+  Math.round(corners.reduce((sum, p) => sum + p[c], 0) / corners.length),
+);
+const TOLERANCE = 26; // mask threshold vs the background colour
+
+// 2. Find the bounding box of real content (anything far from the background colour).
+let minX = info.width, minY = info.height, maxX = -1, maxY = -1;
+for (let y = 0; y < info.height; y++) {
+  for (let x = 0; x < info.width; x++) {
+    const [r, g, b] = pxAt(x, y);
+    if (
+      Math.abs(r - bg[0]) > TOLERANCE ||
+      Math.abs(g - bg[1]) > TOLERANCE ||
+      Math.abs(b - bg[2]) > TOLERANCE
+    ) {
+      if (x < minX) minX = x;
+      if (y < minY) minY = y;
+      if (x > maxX) maxX = x;
+      if (y > maxY) maxY = y;
+    }
+  }
 }
+if (maxX < 0) throw new Error("No content detected — is the background the whole image?");
 
-console.log("generic logo: built");
+// 3. Square-pad the content bbox around its own centre. The square we want covers
+//    [centre - side/2, centre + side/2); parts outside the source are padded with bg.
+const content = {
+  left: minX,
+  top: minY,
+  width: maxX - minX + 1,
+  height: maxY - minY + 1,
+};
+const side = Math.round(Math.max(content.width, content.height) * (1 + PAD_FRACTION * 2));
+const centreX = content.left + content.width / 2;
+const centreY = content.top + content.height / 2;
+const targetLeft = Math.round(centreX - side / 2);
+const targetTop = Math.round(centreY - side / 2);
+
+const extract = {
+  left: Math.max(0, targetLeft),
+  top: Math.max(0, targetTop),
+};
+extract.width = Math.min(side, width - extract.left);
+extract.height = Math.min(side, height - extract.top);
+
+const bgHex =
+  "#" +
+  bg
+    .map((v) => v.toString(16).padStart(2, "0"))
+    .join("")
+    .toUpperCase();
+
+const square = await sharp(SOURCE)
+  .extract(extract)
+  .extend({
+    background: bgHex,
+    // Flat-image assumption: the source background must be uniform for seamless padding.
+    top: extract.top - targetTop,
+    bottom: targetTop + side - (extract.top + extract.height),
+    left: extract.left - targetLeft,
+    right: targetLeft + side - (extract.left + extract.width),
+  })
+  .png({ compressionLevel: 9 })
+  .toBuffer();
+
+await sharp(square).resize(MAX_SIDE, MAX_SIDE).png().toFile(path.join(OUT, "logo.png"));
+
+// 4. Archive the untouched original so it is never lost.
+await mkdir(BRAND_DIR, { recursive: true });
+const ext = path.extname(SOURCE) || ".jpg";
+await copyFile(SOURCE, path.join(BRAND_DIR, `${SLUG}-logo${ext}`));
+
+const report = {
+  source: SOURCE,
+  background: bgHex,
+  contentBox: content,
+  output: `public/images/logo.png (${MAX_SIDE}x${MAX_SIDE})`,
+  archived: `public/images/brand/${SLUG}-logo${ext}`,
+};
+await writeFile(
+  path.join(ROOT, ".cache", "build-logo-report.json"),
+  JSON.stringify(report, null, 2),
+  "utf8",
+).catch(() => {});
+console.log("client logo processed:", JSON.stringify(report));

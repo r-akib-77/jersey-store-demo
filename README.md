@@ -31,7 +31,8 @@ node scripts/smoke.mjs http://localhost:4173   # visual + interaction QA run
 | What | Where |
 | --- | --- |
 | Store name | `src/config/shop.ts` → `name` (nav wordmark, footer, page titles, WhatsApp messages) |
-| Logo | Drop the client's file at `public/images/logo.png` — or point `shopConfig.logo` elsewhere |
+| Logo | `node scripts/build-logo.mjs "<path-to-client-logo>" <slug>` — trims, square-pads and installs it as `public/images/logo.png` (also the favicon); the original is archived under `public/images/brand/` |
+| Colors | Brand tokens in `src/app/globals.css` (`--color-accent*`) — sample the client palette with `node scripts/brand-palette.mjs "<path-to-logo>"` |
 | WhatsApp number | `src/config/shop.ts` → `whatsappNumber` (digits only, no `+`) |
 | Email / phone / address | `src/config/shop.ts` |
 | Social links | `src/config/shop.ts` → `socials` |
@@ -75,7 +76,7 @@ public/images/    generated renders, processed photos, brand mark
 `npm run assets:build` regenerates:
 
 - `public/images/products/*.png` — studio-style jersey renders generated from SVG templates
-- `public/images/logo.png` — the generic brand mark
+- `public/images/logo.png` — the client brand mark (built from the source logo by `scripts/build-logo.mjs`)
 - `public/images/photos/*` — shop photography, cropped to a consistent 4:5 frame
 
 Product photography mixes the client's own photos with free-to-use editorial imagery from

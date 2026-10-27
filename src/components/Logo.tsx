@@ -24,7 +24,7 @@ export function Logo({ inverted = false, className = "" }: { inverted?: boolean;
       </span>
       <span className="flex flex-col leading-none">
         <span
-          className={`font-display text-[15px] font-extrabold uppercase leading-none tracking-[0.2em] ${
+          className={`font-display text-[13px] font-extrabold uppercase leading-none tracking-[0.18em] sm:tracking-[0.2em] sm:text-[15px] ${
             inverted ? "text-white" : "text-ink"
           }`}
         >
@@ -32,7 +32,7 @@ export function Logo({ inverted = false, className = "" }: { inverted?: boolean;
         </span>
         {secondary && (
           <span
-            className={`font-display text-[15px] font-extrabold uppercase leading-none tracking-[0.2em] ${
+            className={`sm:mt-0.5 mt-1 font-display text-[13px] font-extrabold uppercase leading-none tracking-[0.18em] sm:tracking-[0.2em] sm:text-[15px] ${
               inverted ? "text-accent" : "text-muted"
             }`}
           >

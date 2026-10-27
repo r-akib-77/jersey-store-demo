@@ -9,7 +9,7 @@
  */
 export const shopConfig = {
   /** Store name. Change this to the client's brand, e.g. "Goal Sports". */
-  name: "Jersey Store",
+  name: "Da To-To SportsWear",
 
   /** Brand mark. Replace the file at this path with the client's own logo. */
   logo: "/images/logo.png",
@@ -80,8 +80,23 @@ export const shopConfig = {
 
 export type ShopConfig = typeof shopConfig;
 
-/** Splits the store name for the stacked navbar wordmark, e.g. "Jersey Store" -> ["Jersey", "Store"]. */
+/** Splits the store name for the stacked navbar wordmark, so both lines stay balanced.
+ *  "Jersey House" -> ["Jersey", "House"]; "Da To-To SportsWear" -> ["Da To-To", "SportsWear"]. */
 export function brandWordmark(name: string = shopConfig.name): [string, string?] {
-  const [first, ...rest] = name.trim().split(/\s+/);
-  return rest.length ? [first, rest.join(" ")] : [first];
+  const trimmed = name.trim();
+  const words = trimmed.split(/\s+/);
+  if (words.length < 2) return [trimmed];
+
+  let bestIndex = 1;
+  let bestDiff = Infinity;
+  for (let i = 1; i < words.length; i++) {
+    const first = words.slice(0, i).join(" ");
+    const second = words.slice(i).join(" ");
+    const diff = Math.abs(first.length - second.length);
+    if (diff < bestDiff) {
+      bestDiff = diff;
+      bestIndex = i;
+    }
+  }
+  return [words.slice(0, bestIndex).join(" "), words.slice(bestIndex).join(" ")];
 }

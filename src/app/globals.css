@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand palette */
+  /* Brand palette — sampled from the Da To-To SportsWear logo (scripts/build-logo.mjs) */
   --color-ink: #080808;
   --color-ink-soft: #121212;
   --color-ink-line: #262626;
@@ -10,9 +10,9 @@
   --color-line: #e4e4e4;
   --color-body: #202020;
   --color-muted: #6f6f6f;
-  --color-accent: #a3e635;
-  --color-accent-strong: #84cc16;
-  --color-accent-soft: #eefbd6;
+  --color-accent: #3ab6fe;
+  --color-accent-strong: #0e8cd9;
+  --color-accent-soft: #e4f3ff;
   --color-danger: #d92d20;
 
   /* Typography */
@@ -149,7 +149,7 @@
   .btn-primary:hover {
     background-color: var(--color-accent);
     color: var(--color-ink);
-    box-shadow: 0 12px 30px -14px rgba(131, 196, 26, 0.85);
+    box-shadow: 0 12px 30px -14px rgba(14, 140, 217, 0.65);
   }
 
   .btn-accent {
