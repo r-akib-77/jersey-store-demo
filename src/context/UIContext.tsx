@@ -11,18 +11,24 @@ import {
 } from "react";
 import type { Product } from "@/types";
 
-interface UIContextValue {
+interface UIStateValue {
   quickViewProduct: Product | null;
+  isSearchOpen: boolean;
+  toast: string | null;
+}
+
+interface UIActionsValue {
   openQuickView: (product: Product) => void;
   closeQuickView: () => void;
-  isSearchOpen: boolean;
   openSearch: () => void;
   closeSearch: () => void;
-  toast: string | null;
   showToast: (message: string) => void;
 }
 
-const UIContext = createContext<UIContextValue | null>(null);
+export type UIContextValue = UIStateValue & UIActionsValue;
+
+const UIStateContext = createContext<UIStateValue | null>(null);
+const UIActionsContext = createContext<UIActionsValue | null>(null);
 
 export function UIProvider({ children }: { children: ReactNode }) {
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
@@ -52,25 +58,44 @@ export function UIProvider({ children }: { children: ReactNode }) {
     };
   }, [quickViewProduct, isSearchOpen]);
 
-  const value = useMemo<UIContextValue>(
-    () => ({
-      quickViewProduct,
-      openQuickView,
-      closeQuickView,
-      isSearchOpen,
-      openSearch,
-      closeSearch,
-      toast,
-      showToast,
-    }),
-    [quickViewProduct, openQuickView, closeQuickView, isSearchOpen, openSearch, closeSearch, toast, showToast],
+  const stateValue = useMemo<UIStateValue>(
+    () => ({ quickViewProduct, isSearchOpen, toast }),
+    [quickViewProduct, isSearchOpen, toast],
   );
 
-  return <UIContext.Provider value={value}>{children}</UIContext.Provider>;
+  const actionsValue = useMemo<UIActionsValue>(
+    () => ({
+      openQuickView,
+      closeQuickView,
+      openSearch,
+      closeSearch,
+      showToast,
+    }),
+    [openQuickView, closeQuickView, openSearch, closeSearch, showToast],
+  );
+
+  return (
+    <UIActionsContext.Provider value={actionsValue}>
+      <UIStateContext.Provider value={stateValue}>{children}</UIStateContext.Provider>
+    </UIActionsContext.Provider>
+  );
 }
 
-export function useUI(): UIContextValue {
-  const context = useContext(UIContext);
-  if (!context) throw new Error("useUI must be used inside <UIProvider>");
+/**
+ * Stable UI helpers only (never change identity).
+ * Use this in components rendered inside long lists (product cards) so opening an
+ * overlay does not re-render the whole list.
+ */
+export function useUIActions(): UIActionsValue {
+  const context = useContext(UIActionsContext);
+  if (!context) throw new Error("useUIActions must be used inside <UIProvider>");
   return context;
+}
+
+/** Full UI state + helpers. Re-renders whenever an overlay state changes (modals, toasts). */
+export function useUI(): UIContextValue {
+  const state = useContext(UIStateContext);
+  const actions = useContext(UIActionsContext);
+  if (!state || !actions) throw new Error("useUI must be used inside <UIProvider>");
+  return useMemo(() => ({ ...state, ...actions }), [state, actions]);
 }

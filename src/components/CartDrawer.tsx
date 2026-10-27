@@ -4,14 +4,14 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, MessageCircle, ShoppingBag, Trash2, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
-import { useUI } from "@/context/UIContext";
+import { useUIActions } from "@/context/UIContext";
 import { formatBDT } from "@/lib/format";
 import { buildCartMessage, whatsappUrl } from "@/lib/whatsapp";
 import QuantityStepper from "@/components/QuantityStepper";
 
 export default function CartDrawer() {
   const { items, itemCount, subtotal, isCartOpen, closeCart, removeItem, updateQuantity } = useCart();
-  const { showToast } = useUI();
+  const { showToast } = useUIActions();
 
   return (
     <AnimatePresence>

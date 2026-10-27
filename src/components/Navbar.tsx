@@ -8,7 +8,7 @@ import Logo from "@/components/Logo";
 import MobileMenu from "@/components/MobileMenu";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
-import { useUI } from "@/context/UIContext";
+import { useUIActions } from "@/context/UIContext";
 import { shopConfig } from "@/config/shop";
 
 export default function Navbar() {
@@ -17,7 +17,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { itemCount, openCart } = useCart();
   const { count: wishlistCount } = useWishlist();
-  const { openSearch } = useUI();
+  const { openSearch } = useUIActions();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);

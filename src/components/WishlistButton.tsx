@@ -2,7 +2,7 @@
 
 import { Heart } from "lucide-react";
 import { useWishlist } from "@/context/WishlistContext";
-import { useUI } from "@/context/UIContext";
+import { useUIActions } from "@/context/UIContext";
 
 interface WishlistButtonProps {
   productId: string;
@@ -18,7 +18,7 @@ export default function WishlistButton({
   variant = "icon",
 }: WishlistButtonProps) {
   const { has, toggle } = useWishlist();
-  const { showToast } = useUI();
+  const { showToast } = useUIActions();
   const active = has(productId);
 
   return (

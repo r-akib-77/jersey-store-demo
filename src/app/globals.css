@@ -28,6 +28,18 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* No 300ms double-tap-zoom wait on controls — makes taps feel instant on phones */
+  button,
+  [role="button"],
+  a,
+  input,
+  select,
+  textarea,
+  label,
+  summary {
+    touch-action: manipulation;
+  }
+
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;

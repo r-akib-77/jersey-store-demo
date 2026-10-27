@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowLeft, ChevronDown, Info, MessageCircle, ShoppingBag } from "lucide-react";
 import { useCart } from "@/context/CartContext";
-import { useUI } from "@/context/UIContext";
+import { useUIActions } from "@/context/UIContext";
 import { formatBDT } from "@/lib/format";
 import { buildCartMessage, whatsappUrl } from "@/lib/whatsapp";
 import type { CustomerDetails } from "@/types";
@@ -24,7 +24,7 @@ const labelClass = "eyebrow text-muted";
 
 export default function CheckoutView() {
   const { items, subtotal, itemCount } = useCart();
-  const { showToast } = useUI();
+  const { showToast } = useUIActions();
   const [details, setDetails] = useState<CustomerDetails>({
     name: "",
     phone: "",

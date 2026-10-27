@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Eye, Plus, Star } from "lucide-react";
 import type { Product } from "@/types";
 import { useCart } from "@/context/CartContext";
-import { useUI } from "@/context/UIContext";
+import { useUIActions } from "@/context/UIContext";
 import { formatBDT, formatDiscount } from "@/lib/format";
 import SizeSelector from "@/components/SizeSelector";
 import WishlistButton from "@/components/WishlistButton";
@@ -12,7 +12,7 @@ import WishlistButton from "@/components/WishlistButton";
 export default function ProductCard({ product }: { product: Product }) {
   const [size, setSize] = useState<string>(product.sizes[1] ?? product.sizes[0]);
   const { addItem, openCart } = useCart();
-  const { openQuickView } = useUI();
+  const { openQuickView } = useUIActions();
   const discount = formatDiscount(product.price, product.compareAtPrice);
 
   const handleAdd = () => {
@@ -22,7 +22,12 @@ export default function ProductCard({ product }: { product: Product }) {
 
   return (
     <article className="group relative flex h-full flex-col">
-      <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-mist transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1 group-hover:shadow-[0_28px_60px_-38px_rgba(8,8,8,0.55)]">
+      {/* Whole image area opens quick view — on touch there is no hover,
+          so the hover-only button is unreachable; this makes the tap instant. */}
+      <div
+        onClick={() => openQuickView(product)}
+        className="relative aspect-[4/5] cursor-pointer overflow-hidden rounded-2xl bg-mist transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1 group-hover:shadow-[0_28px_60px_-38px_rgba(8,8,8,0.55)]"
+      >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={product.image}
